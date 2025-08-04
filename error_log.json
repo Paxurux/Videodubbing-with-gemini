@@ -1,0 +1,95 @@
+{
+  "errors": [
+    {
+      "timestamp": "2025-07-31T19:32:42.005699",
+      "stage": "test_stage",
+      "error_type": "api_key_error",
+      "severity": "high",
+      "message": "Invalid API key",
+      "recoverable": true,
+      "recovery_suggestions": [
+        "Check API key validity",
+        "Verify API key permissions",
+        "Try rotating to another API key"
+      ]
+    },
+    {
+      "timestamp": "2025-07-31T19:32:42.006702",
+      "stage": "test_stage",
+      "error_type": "validation_error",
+      "severity": "low",
+      "message": "Invalid JSON format",
+      "recoverable": false,
+      "recovery_suggestions": [
+        "Check input format",
+        "Validate data structure",
+        "Review input requirements"
+      ]
+    },
+    {
+      "timestamp": "2025-07-31T19:33:00.755641",
+      "stage": "test",
+      "error_type": "api_key_error",
+      "severity": "high",
+      "message": "Test API key error",
+      "recoverable": true,
+      "recovery_suggestions": [
+        "Check API key validity",
+        "Verify API key permissions",
+        "Try rotating to another API key"
+      ]
+    },
+    {
+      "timestamp": "2025-08-01T18:49:07.812475",
+      "stage": "edge_tts",
+      "error_type": "processing_error",
+      "severity": "medium",
+      "message": "create_error_context() got multiple values for argument 'stage'",
+      "recoverable": true,
+      "recovery_suggestions": [
+        "Review error details",
+        "Check system resources",
+        "Retry the operation"
+      ]
+    },
+    {
+      "timestamp": "2025-08-01T18:49:08.909500",
+      "stage": "edge_tts",
+      "error_type": "processing_error",
+      "severity": "medium",
+      "message": "create_error_context() got multiple values for argument 'stage'",
+      "recoverable": true,
+      "recovery_suggestions": [
+        "Review error details",
+        "Check system resources",
+        "Retry the operation"
+      ]
+    },
+    {
+      "timestamp": "2025-08-01T18:49:10.015428",
+      "stage": "edge_tts",
+      "error_type": "processing_error",
+      "severity": "medium",
+      "message": "create_error_context() got multiple values for argument 'stage'",
+      "recoverable": true,
+      "recovery_suggestions": [
+        "Review error details",
+        "Check system resources",
+        "Retry the operation"
+      ]
+    },
+    {
+      "timestamp": "2025-08-01T18:49:11.036709",
+      "stage": "edge_tts",
+      "error_type": "processing_error",
+      "severity": "medium",
+      "message": "create_error_context() got multiple values for argument 'stage'",
+      "recoverable": true,
+      "recovery_suggestions": [
+        "Review error details",
+        "Check system resources",
+        "Retry the operation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "hi-IN": {
+    "engine": "gemini",
+    "voice": "hi_madhur"
+  },
+  "es-US": {
+    "engine": "edge",
+    "voice": "es-US-AlonsoNeural"
+  },
+  "ja-JP": {
+    "engine": "kokoro",
+    "voice": "af_heart"
+  },
+  "fr-FR": {
+    "engine": "edge",
+    "voice": "fr-FR-DeniseNeural"
+  },
+  "de-DE": {
+    "engine": "edge",
+    "voice": "de-DE-KatjaNeural"
+  },
+  "ko-KR": {
+    "engine": "edge",
+    "voice": "ko-KR-SunHiNeural"
+  },
+  "pt-BR": {
+    "engine": "edge",
+    "voice": "pt-BR-FranciscaNeural"
+  },
+  "ar-EG": {
+    "engine": "edge",
+    "voice": "ar-EG-SalmaNeural"
+  }
+}

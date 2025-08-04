@@ -1,0 +1,122 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Cache directories
+cache/
+.cache/
+__pycache__/
+
+# Model cache
+cache/HF_HOME/
+cache/TORCH_HOME/
+cache/GRADIO_TEMP_DIR/
+
+# Model directories
+kokoro_models/
+models/
+
+# Output directories
+batch_dubbed_videos/
+temp_audio/
+tts_chunks/
+dubbed_videos/
+final_mixed_videos/
+sessions/
+custom_voices/
+
+# Temporary files
+*.tmp
+*.temp
+temp_*
+original_asr.json
+translated.json
+pipeline_state.json
+*.wav
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.mp3
+*.flac
+*.m4a
+*.ogg
+
+# API Keys and secrets
+api_keys.json
+.env
+*.key
+secrets.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+pipeline.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Backup files
+*_backup.py
+*_old.py
+backup_*
+
+# Documentation build
+docs/_build/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/

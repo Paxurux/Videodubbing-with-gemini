@@ -1,0 +1,32 @@
+{
+  "hi-IN": {
+    "engine": "gemini",
+    "voice": "hi_madhur",
+    "source": "custom_mapping"
+  },
+  "es-US": {
+    "engine": "edge",
+    "voice": "es-US-AlonsoNeural",
+    "source": "custom_mapping"
+  },
+  "ja-JP": {
+    "engine": "kokoro",
+    "voice": "af_heart",
+    "source": "custom_mapping"
+  },
+  "fr-FR": {
+    "engine": "edge",
+    "voice": "fr-FR-DeniseNeural",
+    "source": "custom_mapping"
+  },
+  "de-DE": {
+    "engine": "edge",
+    "voice": "de-DE-KatjaNeural",
+    "source": "custom_mapping"
+  },
+  "ko-KR": {
+    "engine": "edge",
+    "voice": "ko-KR-SunHiNeural",
+    "source": "custom_mapping"
+  }
+}

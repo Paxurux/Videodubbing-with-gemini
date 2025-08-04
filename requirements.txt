@@ -1,12 +1,44 @@
+# Core ML and Web Interface
 gradio>=3.50.0
-cuda-python>=12.3
+torch>=2.0.0
 pandas>=2.0.0
+numpy>=1.21.0
 soundfile>=0.12.0
 scipy>=1.10.0
-requests>=2.31.0
-pydantic==2.10.6
 
-# Use a maintained alternative for number‑to‑words support
+# ASR (Automatic Speech Recognition)
 nemo-toolkit[asr]>=1.20.0
 
+# Dubbing Pipeline - AI Services
+google-generativeai>=0.8.0
+tiktoken>=0.7.0
+requests>=2.31.0
+
+# Audio/Video Processing
+pydub>=0.25.1
+moviepy>=1.0.3
+ffmpeg-python>=0.2.0
+
+# Edge TTS (Microsoft Neural Voices)
+edge-tts>=6.1.0
+
+# Kokoro TTS (Local Neural TTS)
+sentencepiece>=0.1.96
+onnxruntime>=1.15.0
+torch>=2.0.0
+numpy>=1.21.0
+
+# Utility Libraries
+python-dotenv>=1.0.0
+typing-extensions>=4.8.0
+pydantic==2.10.6
+pathlib2; python_version<"3.4"
+
+# CUDA Support (optional)
+cuda-python>=12.3; sys_platform=="linux" or sys_platform=="win32"
+
+# Special number-to-words package for Indic languages
 https://github.com/SUP3RMASS1VE/indic_numtowords-1.0.1/releases/download/1.0.1/indic_numtowords-1.0.1-py3-none-any.whl
+
+# Development and debugging
+json5

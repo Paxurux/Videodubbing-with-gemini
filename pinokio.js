@@ -1,8 +1,7 @@
-const path = require('path')
 module.exports = {
   version: "3.7",
-  title: "Parakeet-TDT",
-  description: "Audio Transcription App with Parakeet-TDT-0.6b-v2",
+  title: "Video Dubbing Pipeline",
+  description: "🎬 Professional Video Dubbing Pipeline with Parakeet-TDT-0.6b-v2, Gemini AI, and Edge TTS. Complete solution for automated video dubbing with step-by-step processing and batch video creation from multiple audio files.",
   icon: "icon.png",
   menu: async (kernel, info) => {
     let installed = info.exists("env")
@@ -10,15 +9,15 @@ module.exports = {
       install: info.running("install.js"),
       start: info.running("start.js"),
       update: info.running("update.js"),
-      reset: info.running("reset.js"),
-      link: info.running("link.js")
+      reset: info.running("reset.js")
     }
+    
     if (running.install) {
       return [{
         default: true,
-        icon: "fa-solid fa-plug",
-        text: "Installing",
-        href: "install.js",
+        icon: "fa-solid fa-download",
+        text: "Installing...",
+        href: "install.js"
       }]
     } else if (installed) {
       if (running.start) {
@@ -26,75 +25,63 @@ module.exports = {
         if (local && local.url) {
           return [{
             default: true,
-            icon: "fa-solid fa-rocket",
-            text: "Open Web UI",
-            href: local.url,
+            icon: "fa-solid fa-external-link-alt",
+            text: "Open Interface",
+            href: local.url
           }, {
-            icon: 'fa-solid fa-terminal',
-            text: "Terminal",
-            href: "start.js",
+            icon: "fa-solid fa-terminal",
+            text: "View Terminal",
+            href: "start.js"
           }]
         } else {
           return [{
             default: true,
-            icon: 'fa-solid fa-terminal',
-            text: "Terminal",
-            href: "start.js",
+            icon: "fa-solid fa-terminal",
+            text: "Starting...",
+            href: "start.js"
           }]
         }
       } else if (running.update) {
         return [{
           default: true,
-          icon: 'fa-solid fa-terminal',
-          text: "Updating",
-          href: "update.js",
+          icon: "fa-solid fa-sync",
+          text: "Updating...",
+          href: "update.js"
         }]
       } else if (running.reset) {
         return [{
           default: true,
-          icon: 'fa-solid fa-terminal',
-          text: "Resetting",
-          href: "reset.js",
-        }]
-      } else if (running.link) {
-        return [{
-          default: true,
-          icon: 'fa-solid fa-terminal',
-          text: "Deduplicating",
-          href: "link.js",
+          icon: "fa-solid fa-broom",
+          text: "Resetting...",
+          href: "reset.js"
         }]
       } else {
         return [{
           default: true,
-          icon: "fa-solid fa-power-off",
-          text: "Start",
-          href: "start.js",
+          icon: "fa-solid fa-play",
+          text: "Start Application",
+          href: "start.js"
         }, {
-          icon: "fa-solid fa-plug",
-          text: "Update",
-          href: "update.js",
+          icon: "fa-solid fa-sync-alt",
+          text: "Update Dependencies",
+          href: "update.js"
         }, {
-          icon: "fa-solid fa-plug",
-          text: "Install",
-          href: "install.js",
+          icon: "fa-solid fa-redo",
+          text: "Reinstall",
+          href: "install.js"
         }, {
-          icon: "fa-solid fa-file-zipper",
-          text: "<div><strong>Save Disk Space</strong><div>Deduplicates redundant library files</div></div>",
-          href: "link.js",
-        }, {
-          icon: "fa-regular fa-circle-xmark",
-          text: "<div><strong>Reset</strong><div>Revert to pre-install state</div></div>",
+          icon: "fa-solid fa-trash-restore",
+          text: "Reset & Clean",
           href: "reset.js",
-          confirm: "Are you sure you wish to reset the app?"
-
+          confirm: "This will clean all temporary files and cache. Continue?"
         }]
       }
     } else {
       return [{
         default: true,
-        icon: "fa-solid fa-plug",
+        icon: "fa-solid fa-download",
         text: "Install",
-        href: "install.js",
+        href: "install.js"
       }]
     }
   }
