@@ -24,7 +24,7 @@ module.exports = {
           "python app.py"
         ],
         on: [{
-          "event": "/Running on local URL:\\s+(http:\\/\\/[0-9.:]+)/",
+          "event": "/http:\\/\\/[0-9.:]+/",
           "done": true
         }]
       }
