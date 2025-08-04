@@ -1025,14 +1025,16 @@ def get_gemini_languages():
         from gemini_voice_library import GeminiVoiceLibrary
         gemini_library = GeminiVoiceLibrary()
         
-        # Create language choices with display names
+        # Create language choices with display names (official Gemini TTS supported languages)
         language_mapping = {
-            "en": "English", "hi": "Hindi", "es": "Spanish", "ja": "Japanese",
-            "fr": "French", "de": "German", "ko": "Korean", "pt": "Portuguese",
-            "ar": "Arabic", "it": "Italian", "ru": "Russian", "nl": "Dutch",
-            "pl": "Polish", "th": "Thai", "tr": "Turkish", "vi": "Vietnamese",
-            "ro": "Romanian", "uk": "Ukrainian", "bn": "Bengali", "mr": "Marathi",
-            "ta": "Tamil", "te": "Telugu"
+            "ar": "Arabic (Egyptian)", "de": "German (Germany)", "en": "English (US)", 
+            "es": "Spanish (US)", "fr": "French (France)", "hi": "Hindi (India)",
+            "id": "Indonesian (Indonesia)", "it": "Italian (Italy)", "ja": "Japanese (Japan)",
+            "ko": "Korean (Korea)", "pt": "Portuguese (Brazil)", "ru": "Russian (Russia)",
+            "nl": "Dutch (Netherlands)", "pl": "Polish (Poland)", "th": "Thai (Thailand)",
+            "tr": "Turkish (Turkey)", "vi": "Vietnamese (Vietnam)", "ro": "Romanian (Romania)",
+            "uk": "Ukrainian (Ukraine)", "bn": "Bengali (Bangladesh)", "mr": "Marathi (India)",
+            "ta": "Tamil (India)", "te": "Telugu (India)"
         }
         
         languages = []

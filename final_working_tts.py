@@ -50,7 +50,7 @@ class FinalWorkingTTS:
             return 0.0
     
     def generate_tts_audio(self, text: str, segment_index: int) -> Optional[str]:
-        """Generate TTS audio with confirmed working configuration."""
+        """Generate TTS audio using official Gemini TTS API."""
         if not text.strip():
             return None
         
@@ -60,88 +60,64 @@ class FinalWorkingTTS:
         time.sleep(1)
         
         try:
-            # REST API endpoint
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent?key={self.api_key}"
+            # Use the official Google Generative AI client
+            from google import genai
+            from google.genai import types
             
-            # Request payload
-            payload = {
-                "contents": [{"parts": [{"text": text.strip()}]}],
-                "generationConfig": {
-                    "response_modalities": ["AUDIO"],
-                    "speech_config": {
-                        "voice_config": {
-                            "prebuilt_voice_config": {
-                                "voice_name": self.voice_name
-                            }
-                        }
-                    }
-                }
-            }
+            # Configure the client
+            client = genai.Client(api_key=self.api_key)
             
-            # Make request with timeout
-            response = requests.post(
-                url, 
-                headers={"Content-Type": "application/json"}, 
-                json=payload, 
-                timeout=30
+            # Generate TTS audio
+            response = client.models.generate_content(
+                model=self.model,
+                contents=text.strip(),
+                config=types.GenerateContentConfig(
+                    response_modalities=["AUDIO"],
+                    speech_config=types.SpeechConfig(
+                        voice_config=types.VoiceConfig(
+                            prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                                voice_name=self.voice_name,
+                            )
+                        )
+                    ),
+                )
             )
             
-            print(f"[{segment_index}] 📥 Response: {response.status_code}")
+            print(f"[{segment_index}] 📥 Response received")
             
-            if response.status_code == 200:
-                result = response.json()
+            # Extract audio data
+            if (response.candidates and 
+                response.candidates[0].content and 
+                response.candidates[0].content.parts):
                 
-                # Extract audio data
-                if ('candidates' in result and result['candidates'] and 
-                    'content' in result['candidates'][0] and 
-                    'parts' in result['candidates'][0]['content']):
+                audio_data = response.candidates[0].content.parts[0].inline_data.data
+                
+                print(f"[{segment_index}] 📊 Audio data: {len(audio_data)} bytes")
+                
+                if len(audio_data) > 1000:
+                    audio_filename = f"tts_chunks/segment_{segment_index:03d}.wav"
                     
-                    parts = result['candidates'][0]['content']['parts']
-                    
-                    if parts and 'inlineData' in parts[0] and 'data' in parts[0]['inlineData']:
-                        audio_b64 = parts[0]['inlineData']['data']
-                        mime_type = parts[0]['inlineData'].get('mimeType', 'unknown')
-                        
-                        print(f"[{segment_index}] 🎵 MIME: {mime_type}, B64 len: {len(audio_b64)}")
-                        
-                        if audio_b64:
-                            # Decode audio data
-                            audio_data = base64.b64decode(audio_b64)
-                            print(f"[{segment_index}] 📊 Decoded: {len(audio_data)} bytes")
-                            
-                            if len(audio_data) > 1000:
-                                audio_filename = f"tts_chunks/segment_{segment_index:03d}.wav"
-                                
-                                # Save as WAV file
-                                if self.save_audio_as_wav(audio_data, audio_filename):
-                                    # Verify audio has content
-                                    if self.verify_audio_content(audio_filename):
-                                        file_size = os.path.getsize(audio_filename)
-                                        duration = self.get_audio_duration(audio_filename)
-                                        print(f"[{segment_index}] ✅ Generated valid audio: {audio_filename} ({file_size} bytes, {duration:.2f}s)")
-                                        return audio_filename
-                                    else:
-                                        print(f"[{segment_index}] ⚠️ Generated silent audio")
-                                else:
-                                    print(f"[{segment_index}] ❌ Failed to save audio")
-                            else:
-                                print(f"[{segment_index}] ⚠️ Audio data too small: {len(audio_data)} bytes")
+                    # Save as WAV file using the official wave format
+                    if self.save_audio_as_wav(audio_data, audio_filename):
+                        # Verify audio has content
+                        if self.verify_audio_content(audio_filename):
+                            file_size = os.path.getsize(audio_filename)
+                            duration = self.get_audio_duration(audio_filename)
+                            print(f"[{segment_index}] ✅ Generated valid audio: {audio_filename} ({file_size} bytes, {duration:.2f}s)")
+                            return audio_filename
                         else:
-                            print(f"[{segment_index}] ❌ No audio data in response")
+                            print(f"[{segment_index}] ⚠️ Generated silent audio")
                     else:
-                        print(f"[{segment_index}] ❌ Invalid response structure")
+                        print(f"[{segment_index}] ❌ Failed to save audio")
                 else:
-                    print(f"[{segment_index}] ❌ No candidates in response")
-            elif response.status_code == 429:
-                print(f"[{segment_index}] ⏳ Rate limited - waiting longer...")
-                time.sleep(5)  # Wait longer for rate limit
-                return None
+                    print(f"[{segment_index}] ⚠️ Audio data too small: {len(audio_data)} bytes")
             else:
-                error_text = response.text[:200] if response.text else "No error details"
-                print(f"[{segment_index}] ❌ API error {response.status_code}: {error_text}")
+                print(f"[{segment_index}] ❌ No audio data in response")
                 
         except Exception as e:
-            print(f"[{segment_index}] ❌ Request failed: {str(e)}")
+            print(f"[{segment_index}] ❌ TTS generation failed: {str(e)}")
+            # Add longer delay on error
+            time.sleep(2)
         
         return None
     

@@ -18,161 +18,93 @@ class GeminiVoiceLibrary:
         self.preview_texts = self._load_preview_texts()
         
     def _load_gemini_voices(self) -> Dict[str, List[str]]:
-        """Load comprehensive Gemini voice library."""
-        return {
-            "en": [
-                "gemini_en_soft",
-                "gemini_en_deep", 
-                "gemini_en_natural",
-                "gemini_en_fast",
-                "gemini_en_warm",
-                "gemini_en_professional"
-            ],
-            "hi": [
-                "gemini_hi_deep",
-                "gemini_hi_female",
-                "gemini_hi_soft",
-                "gemini_hi_natural",
-                "gemini_hi_warm"
-            ],
-            "es": [
-                "gemini_es_bright",
-                "gemini_es_soft",
-                "gemini_es_deep",
-                "gemini_es_natural",
-                "gemini_es_warm"
-            ],
-            "ja": [
-                "gemini_ja_soft",
-                "gemini_ja_deep",
-                "gemini_ja_natural",
-                "gemini_ja_anime",
-                "gemini_ja_professional"
-            ],
-            "fr": [
-                "gemini_fr_soft",
-                "gemini_fr_deep",
-                "gemini_fr_natural",
-                "gemini_fr_elegant",
-                "gemini_fr_warm"
-            ],
-            "de": [
-                "gemini_de_soft",
-                "gemini_de_deep",
-                "gemini_de_natural",
-                "gemini_de_professional",
-                "gemini_de_warm"
-            ],
-            "ko": [
-                "gemini_ko_soft",
-                "gemini_ko_deep",
-                "gemini_ko_natural",
-                "gemini_ko_cute",
-                "gemini_ko_professional"
-            ],
-            "pt": [
-                "gemini_pt_soft",
-                "gemini_pt_deep",
-                "gemini_pt_natural",
-                "gemini_pt_warm",
-                "gemini_pt_brazilian"
-            ],
-            "ar": [
-                "gemini_ar_soft",
-                "gemini_ar_deep",
-                "gemini_ar_natural",
-                "gemini_ar_classical",
-                "gemini_ar_modern"
-            ],
-            "it": [
-                "gemini_it_soft",
-                "gemini_it_deep",
-                "gemini_it_natural",
-                "gemini_it_elegant",
-                "gemini_it_warm"
-            ],
-            "ru": [
-                "gemini_ru_soft",
-                "gemini_ru_deep",
-                "gemini_ru_natural",
-                "gemini_ru_professional",
-                "gemini_ru_warm"
-            ],
-            "nl": [
-                "gemini_nl_soft",
-                "gemini_nl_deep",
-                "gemini_nl_natural",
-                "gemini_nl_warm"
-            ],
-            "pl": [
-                "gemini_pl_soft",
-                "gemini_pl_deep",
-                "gemini_pl_natural",
-                "gemini_pl_warm"
-            ],
-            "th": [
-                "gemini_th_soft",
-                "gemini_th_deep",
-                "gemini_th_natural",
-                "gemini_th_traditional"
-            ],
-            "tr": [
-                "gemini_tr_soft",
-                "gemini_tr_deep",
-                "gemini_tr_natural",
-                "gemini_tr_warm"
-            ],
-            "vi": [
-                "gemini_vi_soft",
-                "gemini_vi_deep",
-                "gemini_vi_natural",
-                "gemini_vi_southern"
-            ],
-            "ro": [
-                "gemini_ro_soft",
-                "gemini_ro_deep",
-                "gemini_ro_natural"
-            ],
-            "uk": [
-                "gemini_uk_soft",
-                "gemini_uk_deep",
-                "gemini_uk_natural"
-            ],
-            "bn": [
-                "gemini_bn_soft",
-                "gemini_bn_deep",
-                "gemini_bn_natural"
-            ],
-            "mr": [
-                "gemini_mr_soft",
-                "gemini_mr_deep",
-                "gemini_mr_natural"
-            ],
-            "ta": [
-                "gemini_ta_soft",
-                "gemini_ta_deep",
-                "gemini_ta_natural"
-            ],
-            "te": [
-                "gemini_te_soft",
-                "gemini_te_deep",
-                "gemini_te_natural"
-            ]
+        """Load official Gemini TTS voice library with all 30 supported voices."""
+        # Official Gemini TTS voices - same for all languages (auto-detected)
+        official_voices = [
+            "Zephyr",      # Bright
+            "Puck",        # Upbeat
+            "Charon",      # Informative
+            "Kore",        # Firm
+            "Fenrir",      # Excitable
+            "Leda",        # Youthful
+            "Orus",        # Firm
+            "Aoede",       # Breezy
+            "Callirrhoe",  # Easy-going
+            "Autonoe",     # Bright
+            "Enceladus",   # Breathy
+            "Iapetus",     # Clear
+            "Umbriel",     # Easy-going
+            "Algieba",     # Smooth
+            "Despina",     # Smooth
+            "Erinome",     # Clear
+            "Algenib",     # Gravelly
+            "Rasalgethi",  # Informative
+            "Laomedeia",   # Upbeat
+            "Achernar",    # Soft
+            "Alnilam",     # Firm
+            "Schedar",     # Even
+            "Gacrux",      # Mature
+            "Pulcherrima", # Forward
+            "Achird",      # Friendly
+            "Zubenelgenubi", # Casual
+            "Vindemiatrix", # Gentle
+            "Sadachbia",   # Lively
+            "Sadaltager",  # Knowledgeable
+            "Sulafat"      # Warm
+        ]
+        
+        # Supported languages with BCP-47 codes
+        supported_languages = {
+            "ar-EG": "Arabic (Egyptian)",
+            "de-DE": "German (Germany)", 
+            "en-US": "English (US)",
+            "es-US": "Spanish (US)",
+            "fr-FR": "French (France)",
+            "hi-IN": "Hindi (India)",
+            "id-ID": "Indonesian (Indonesia)",
+            "it-IT": "Italian (Italy)",
+            "ja-JP": "Japanese (Japan)",
+            "ko-KR": "Korean (Korea)",
+            "pt-BR": "Portuguese (Brazil)",
+            "ru-RU": "Russian (Russia)",
+            "nl-NL": "Dutch (Netherlands)",
+            "pl-PL": "Polish (Poland)",
+            "th-TH": "Thai (Thailand)",
+            "tr-TR": "Turkish (Turkey)",
+            "vi-VN": "Vietnamese (Vietnam)",
+            "ro-RO": "Romanian (Romania)",
+            "uk-UA": "Ukrainian (Ukraine)",
+            "bn-BD": "Bengali (Bangladesh)",
+            "en-IN": "English (India)",
+            "mr-IN": "Marathi (India)",
+            "ta-IN": "Tamil (India)",
+            "te-IN": "Telugu (India)"
         }
+        
+        # Create voice mapping - all voices available for all languages
+        voice_mapping = {}
+        for lang_code in supported_languages.keys():
+            # Use simplified language code for internal mapping
+            simple_lang = lang_code.split('-')[0]
+            if simple_lang not in voice_mapping:
+                voice_mapping[simple_lang] = official_voices.copy()
+        
+        return voice_mapping
     
     def _load_preview_texts(self) -> Dict[str, str]:
-        """Load preview texts for each language."""
+        """Load preview texts for each supported language."""
         return {
-            "en": "Hello world, this is a Gemini TTS voice preview test.",
-            "hi": "नमस्ते दुनिया, यह जेमिनी टीटीएस आवाज़ का पूर्वावलोकन है।",
-            "es": "Hola mundo, esta es una prueba de vista previa de voz Gemini TTS.",
-            "ja": "こんにちは世界、これはGemini TTSの音声プレビューテストです。",
-            "fr": "Bonjour le monde, ceci est un test d'aperçu vocal Gemini TTS.",
+            "ar": "مرحبا بالعالم، هذا اختبار معاينة صوت Gemini TTS.",
             "de": "Hallo Welt, das ist ein Gemini TTS Sprachvorschau-Test.",
+            "en": "Hello world, this is a Gemini TTS voice preview test.",
+            "es": "Hola mundo, esta es una prueba de vista previa de voz Gemini TTS.",
+            "fr": "Bonjour le monde, ceci est un test d'aperçu vocal Gemini TTS.",
+            "hi": "नमस्ते दुनिया, यह जेमिनी टीटीएस आवाज़ का पूर्वावलोकन है।",
+            "id": "Halo dunia, ini adalah tes pratinjau suara Gemini TTS.",
+            "it": "Ciao mondo, questo è un test di anteprima vocale Gemini TTS.",
+            "ja": "こんにちは世界、これはGemini TTSの音声プレビューテストです。",
             "ko": "안녕하세요 세계, 이것은 Gemini TTS 음성 미리보기 테스트입니다.",
             "pt": "Olá mundo, este é um teste de visualização de voz Gemini TTS.",
-            "ar": "مرحبا بالعالم، هذا اختبار معاينة صوت Gemini TTS.",
-            "it": "Ciao mondo, questo è un test di anteprima vocale Gemini TTS.",
             "ru": "Привет мир, это тест предварительного просмотра голоса Gemini TTS.",
             "nl": "Hallo wereld, dit is een Gemini TTS spraakvoorbeeld test.",
             "pl": "Witaj świecie, to jest test podglądu głosu Gemini TTS.",
@@ -201,42 +133,62 @@ class GeminiVoiceLibrary:
     
     def is_gemini_voice(self, voice_name: str) -> bool:
         """Check if a voice name is a Gemini voice."""
-        return voice_name.startswith("gemini_")
+        official_voices = [
+            "Zephyr", "Puck", "Charon", "Kore", "Fenrir", "Leda", "Orus", "Aoede",
+            "Callirrhoe", "Autonoe", "Enceladus", "Iapetus", "Umbriel", "Algieba",
+            "Despina", "Erinome", "Algenib", "Rasalgethi", "Laomedeia", "Achernar",
+            "Alnilam", "Schedar", "Gacrux", "Pulcherrima", "Achird", "Zubenelgenubi",
+            "Vindemiatrix", "Sadachbia", "Sadaltager", "Sulafat"
+        ]
+        return voice_name in official_voices
     
     def get_voice_language(self, voice_name: str) -> Optional[str]:
         """Get the language code for a Gemini voice."""
-        if not self.is_gemini_voice(voice_name):
-            return None
-        
-        # Extract language from voice name (e.g., "gemini_hi_deep" -> "hi")
-        parts = voice_name.split("_")
-        if len(parts) >= 3:
-            return parts[1]
+        # Gemini TTS voices are language-agnostic (auto-detected)
+        # Return None to indicate language is auto-detected
+        if self.is_gemini_voice(voice_name):
+            return None  # Language is auto-detected by Gemini
         return None
     
     def get_voice_display_name(self, voice_name: str) -> str:
         """Get a user-friendly display name for a voice."""
-        if not self.is_gemini_voice(voice_name):
-            return voice_name
+        # For official Gemini voices, return the voice name with description
+        voice_descriptions = {
+            "Zephyr": "Bright",
+            "Puck": "Upbeat", 
+            "Charon": "Informative",
+            "Kore": "Firm",
+            "Fenrir": "Excitable",
+            "Leda": "Youthful",
+            "Orus": "Firm",
+            "Aoede": "Breezy",
+            "Callirrhoe": "Easy-going",
+            "Autonoe": "Bright",
+            "Enceladus": "Breathy",
+            "Iapetus": "Clear",
+            "Umbriel": "Easy-going",
+            "Algieba": "Smooth",
+            "Despina": "Smooth",
+            "Erinome": "Clear",
+            "Algenib": "Gravelly",
+            "Rasalgethi": "Informative",
+            "Laomedeia": "Upbeat",
+            "Achernar": "Soft",
+            "Alnilam": "Firm",
+            "Schedar": "Even",
+            "Gacrux": "Mature",
+            "Pulcherrima": "Forward",
+            "Achird": "Friendly",
+            "Zubenelgenubi": "Casual",
+            "Vindemiatrix": "Gentle",
+            "Sadachbia": "Lively",
+            "Sadaltager": "Knowledgeable",
+            "Sulafat": "Warm"
+        }
         
-        # Convert "gemini_hi_deep" to "Hindi Deep (Gemini)"
-        parts = voice_name.split("_")
-        if len(parts) >= 3:
-            lang_code = parts[1]
-            voice_type = parts[2].title()
-            
-            # Language code to name mapping
-            lang_names = {
-                "en": "English", "hi": "Hindi", "es": "Spanish", "ja": "Japanese",
-                "fr": "French", "de": "German", "ko": "Korean", "pt": "Portuguese",
-                "ar": "Arabic", "it": "Italian", "ru": "Russian", "nl": "Dutch",
-                "pl": "Polish", "th": "Thai", "tr": "Turkish", "vi": "Vietnamese",
-                "ro": "Romanian", "uk": "Ukrainian", "bn": "Bengali", "mr": "Marathi",
-                "ta": "Tamil", "te": "Telugu"
-            }
-            
-            lang_name = lang_names.get(lang_code, lang_code.upper())
-            return f"{lang_name} {voice_type} (Gemini)"
+        description = voice_descriptions.get(voice_name, "")
+        if description:
+            return f"{voice_name} ({description})"
         
         return voice_name
     
