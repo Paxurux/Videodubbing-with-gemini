@@ -36,16 +36,7 @@ try:
     from custom_voice_assignment_panel import CustomVoiceAssignmentPanel
     from gemini_voice_library import GeminiVoiceLibrary
     
-    # Import Kokoro TTS components
-    try:
-        from kokoro_tts_service import KokoroTTSService
-        from kokoro_voice_parser import KokoroVoiceParser
-        KOKORO_TTS_AVAILABLE = True
-        print("✅ Kokoro TTS service loaded")
-        print("✅ Kokoro voice parser loaded")
-    except ImportError as e:
-        KOKORO_TTS_AVAILABLE = False
-        print(f"⚠️ Kokoro TTS not available: {str(e)}")
+
     print("✅ Google Generative AI library available")
     print("✅ Fixed TTS Dubbing service loaded (REST API)")
     print("✅ Final Working TTS service loaded")
@@ -986,38 +977,7 @@ def get_manual_mode_status():
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
-def get_kokoro_languages():
-    """Get available Kokoro languages"""
-    if not KOKORO_TTS_AVAILABLE:
-        return []
-    
-    try:
-        voice_parser = KokoroVoiceParser()
-        languages = []
-        for lang_code, lang_name in voice_parser.language_mapping.items():
-            languages.append((lang_name, lang_code))
-        return languages
-    except Exception as e:
-        print(f"Error getting Kokoro languages: {str(e)}")
-        return []
 
-def get_kokoro_voices_for_language(language_code):
-    """Get available Kokoro voices for a specific language"""
-    if not KOKORO_TTS_AVAILABLE or not language_code:
-        return []
-    
-    try:
-        voice_parser = KokoroVoiceParser()
-        voices = voice_parser.get_voice_choices_for_language(language_code)
-        return voices
-    except Exception as e:
-        print(f"Error getting Kokoro voices for {language_code}: {str(e)}")
-        return []
-
-def update_kokoro_voices(language_code):
-    """Update Kokoro voice dropdown based on selected language"""
-    voices = get_kokoro_voices_for_language(language_code)
-    return gr.update(choices=voices, value=voices[0] if voices else None)
 
 def get_gemini_languages():
     """Get available Gemini languages"""
@@ -1873,14 +1833,12 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                         tts_choices = [("Gemini TTS", "gemini")]
                         if EDGE_TTS_AVAILABLE:
                             tts_choices.append(("Edge TTS (Microsoft)", "edge"))
-                        if KOKORO_TTS_AVAILABLE:
-                            tts_choices.append(("Kokoro TTS (Local)", "kokoro"))
                         
                         tts_engine_selection = gr.Dropdown(
                             label="🎙️ TTS Engine",
                             choices=tts_choices,
                             value="gemini",
-                            info="Choose between Gemini AI, Microsoft Edge neural voices, and local Kokoro TTS"
+                            info="Choose between Gemini AI and Microsoft Edge neural voices"
                         )
                         
                         tts_method_selection = gr.Radio(
@@ -1976,23 +1934,7 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                             info="Choose from available neural voices for selected language"
                         )
                         
-                        # Kokoro TTS Language Selection
-                        kokoro_language_selection = gr.Dropdown(
-                            label="Select Language",
-                            choices=get_kokoro_languages(),
-                            value="a" if get_kokoro_languages() else None,
-                            visible=False,
-                            info="Select language first to see available Kokoro voices"
-                        )
-                        
-                        # Kokoro TTS Voice Selection
-                        kokoro_voice_selection = gr.Dropdown(
-                            label="Kokoro Voice",
-                            choices=get_kokoro_voices_for_language("a") if KOKORO_TTS_AVAILABLE else [],
-                            value=None,
-                            visible=False,
-                            info="Choose from available Kokoro voices for selected language"
-                        )
+
                     
                     # Voice preview button
                     with gr.Row():
@@ -2014,15 +1956,12 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                         """Toggle UI elements based on selected TTS engine."""
                         is_gemini = (engine == "gemini")
                         is_edge = (engine == "edge")
-                        is_kokoro = (engine == "kokoro")
                         
                         # Initialize default values
                         gemini_voices = []
                         gemini_default = None
                         edge_voices = []
                         edge_default = None
-                        kokoro_voices = []
-                        kokoro_default = None
                         
                         # Initialize Gemini TTS voices if selected
                         if is_gemini:
@@ -2046,26 +1985,13 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                             except Exception as e:
                                 print(f"Error initializing Edge TTS voices: {str(e)}")
                         
-                        # Initialize Kokoro TTS voices if selected
-                        if is_kokoro and KOKORO_TTS_AVAILABLE:
-                            try:
-                                kokoro_parser = KokoroVoiceParser()
-                                
-                                # Get American English voices as default
-                                kokoro_voices = kokoro_parser.get_voice_choices_for_language("a")
-                                kokoro_default = kokoro_voices[0] if kokoro_voices else None
-                            except Exception as e:
-                                print(f"Error initializing Kokoro TTS voices: {str(e)}")
-                        
                         return (
                             gr.update(visible=is_gemini),  # gemini_language_selection
                             gr.update(visible=is_gemini, choices=gemini_voices, value=gemini_default),  # gemini_voice_selection
                             gr.update(visible=is_edge),    # edge_language_selection
                             gr.update(visible=is_edge, choices=edge_voices, value=edge_default),  # edge_voice_selection
-                            gr.update(visible=is_kokoro),  # kokoro_language_selection
-                            gr.update(visible=is_kokoro, choices=kokoro_voices, value=kokoro_default),  # kokoro_voice_selection
-                            gr.update(visible=(is_gemini or is_edge or is_kokoro)),  # preview_voice_btn
-                            gr.update(visible=(is_gemini or is_edge or is_kokoro))   # preview_audio
+                            gr.update(visible=(is_gemini or is_edge)),  # preview_voice_btn
+                            gr.update(visible=(is_gemini or is_edge))   # preview_audio
                         )
                     
                     def update_edge_voices(language_code):
@@ -2095,7 +2021,7 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                     tts_engine_selection.change(
                         toggle_tts_engine,
                         inputs=[tts_engine_selection],
-                        outputs=[gemini_language_selection, gemini_voice_selection, edge_language_selection, edge_voice_selection, kokoro_language_selection, kokoro_voice_selection, preview_voice_btn, preview_audio]
+                        outputs=[gemini_language_selection, gemini_voice_selection, edge_language_selection, edge_voice_selection, preview_voice_btn, preview_audio]
                     )
                     
                     edge_language_selection.change(
@@ -2104,12 +2030,7 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                         outputs=[edge_voice_selection]
                     )
                     
-                    # Kokoro language selection change
-                    kokoro_language_selection.change(
-                        update_kokoro_voices,
-                        inputs=[kokoro_language_selection],
-                        outputs=[kokoro_voice_selection]
-                    )
+
                     
                     # Gemini language selection change
                     gemini_language_selection.change(
@@ -2125,15 +2046,14 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                     )
                     
                     # Voice preview function
-                    def preview_voice(engine, gemini_lang, gemini_voice, edge_lang, edge_voice, kokoro_lang, kokoro_voice):
+                    def preview_voice(engine, gemini_lang, gemini_voice, edge_lang, edge_voice):
                         """Generate a preview of the selected voice."""
                         try:
                             if engine == "gemini":
                                 return preview_gemini_voice(gemini_lang, gemini_voice)
                             elif engine == "edge" and EDGE_TTS_AVAILABLE:
                                 return preview_edge_voice(edge_lang, edge_voice)
-                            elif engine == "kokoro" and KOKORO_TTS_AVAILABLE:
-                                return preview_kokoro_voice(kokoro_lang, kokoro_voice)
+
                             else:
                                 return "❌ Voice preview not available for this engine"
                         except Exception as e:
@@ -2274,7 +2194,7 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                     # Connect preview button
                     preview_voice_btn.click(
                         preview_voice,
-                        inputs=[tts_engine_selection, gemini_language_selection, gemini_voice_selection, edge_language_selection, edge_voice_selection, kokoro_language_selection, kokoro_voice_selection],
+                        inputs=[tts_engine_selection, gemini_language_selection, gemini_voice_selection, edge_language_selection, edge_voice_selection],
                         outputs=[preview_audio]
                     )
                     
@@ -3820,7 +3740,7 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
             json_output = json.dumps(sample_json, indent=2, ensure_ascii=False)
             return json_output, "✅ Manual translation enabled. Edit the JSON above with your translation."
         
-        def generate_tts_audio(translation_json, tts_engine, gemini_language, gemini_voice, edge_language, edge_voice, kokoro_language, kokoro_voice, tts_method, tts_instructions):
+        def generate_tts_audio(translation_json, tts_engine, gemini_language, gemini_voice, edge_language, edge_voice, tts_method, tts_instructions):
             """Generate TTS audio using selected engine and method"""
             try:
                 # Parse translation JSON
@@ -3841,112 +3761,7 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
                     print(f"[TTS {progress:.1%}] {message}")
                 
                 # Choose TTS engine
-                if tts_engine == "kokoro" and KOKORO_TTS_AVAILABLE:
-                    # Use Kokoro TTS
-                    print("🎌 Using Kokoro TTS (Local)")
-                    
-                    if not kokoro_voice:
-                        return "❌ No Kokoro voice selected", None
-                    
-                    try:
-                        # Parse voice name from display name
-                        voice_parser = KokoroVoiceParser()
-                        voice_name = voice_parser.get_voice_name_from_display(kokoro_voice, kokoro_language)
-                        
-                        if not voice_name:
-                            return f"❌ No Kokoro voice found for language={kokoro_language}, name={kokoro_voice}", None
-                        
-                        print(f"🎤 Using Kokoro TTS: {voice_name} for language: {kokoro_language}")
-                        
-                        # Initialize Kokoro TTS service
-                        kokoro_service = KokoroTTSService(voice_name=voice_name)
-                        
-                        if not kokoro_service.model_available:
-                            return "❌ Kokoro model not available. Please ensure Kokoro-82M is installed.", None
-                        
-                        # Generate TTS chunks with fallback to Edge TTS
-                        chunks_dir = kokoro_service.generate_tts_chunks(translated_segments, progress_callback)
-                        
-                        if chunks_dir and os.path.exists(chunks_dir):
-                            # List generated files
-                            chunk_files = [f for f in os.listdir(chunks_dir) if f.endswith('.wav')]
-                            
-                            if chunk_files:
-                                # Use chunked audio stitcher for proper combination
-                                progress_callback(0.9, "Stitching Kokoro audio chunks with timestamp sync...")
-                                
-                                try:
-                                    stitcher = ChunkedAudioStitcher()
-                                    
-                                    # Stitch chunks with proper timestamp matching
-                                    final_audio = stitcher.stitch_chunked_audio(
-                                        chunks_dir, 
-                                        "chunked_transcript.json",
-                                        "final_audio/kokoro_tts_final.wav"
-                                    )
-                                    
-                                    # Create video-ready audio
-                                    video_ready_audio = stitcher.create_video_ready_audio(
-                                        final_audio,
-                                        None,  # No original video provided yet
-                                        "final_audio/kokoro_tts_video_ready.wav"
-                                    )
-                                    
-                                    # Generate stitching report
-                                    report = stitcher.get_stitching_report(chunks_dir, final_audio)
-                                    
-                                    # Copy for UI preview
-                                    combined_audio = "temp_audio/combined_kokoro_tts.wav"
-                                    os.makedirs("temp_audio", exist_ok=True)
-                                    import shutil
-                                    shutil.copy2(video_ready_audio, combined_audio)
-                                    
-                                    total_size = sum(os.path.getsize(os.path.join(chunks_dir, f)) for f in chunk_files)
-                                    
-                                    return f"""✅ Kokoro TTS completed successfully!
-🎤 Voice: {voice_name}
-🌍 Language: {kokoro_language}
-📁 Chunks directory: {chunks_dir}
-🎵 Generated chunks: {len(chunk_files)}
-📊 Total size: {total_size:,} bytes
-🎯 Method: Local Kokoro Neural TTS with timestamp sync
-⚡ Segments: {len(translated_segments)}
-🔄 Fallback: Edge TTS (if available)
-🎼 Final audio: {final_audio}
-📺 Video-ready: {video_ready_audio}
-⏱️ Timing accuracy: {report['timing_accuracy']}
-🎚️ Audio duration: {report['final_audio_duration']:.2f}s
-🏠 Privacy: Fully local processing""", combined_audio
-                                    
-                                except Exception as e:
-                                    print(f"⚠️ Kokoro chunked stitching failed, using simple combination: {str(e)}")
-                                    
-                                    # Fallback to simple combination
-                                    combined_audio = "temp_audio/combined_kokoro_tts.wav"
-                                    os.makedirs("temp_audio", exist_ok=True)
-                                    first_chunk = os.path.join(chunks_dir, sorted(chunk_files)[0])
-                                    import shutil
-                                    shutil.copy2(first_chunk, combined_audio)
-                                    
-                                    total_size = sum(os.path.getsize(os.path.join(chunks_dir, f)) for f in chunk_files)
-                                    
-                                    return f"""✅ Kokoro TTS completed (basic mode)!
-🎤 Voice: {voice_name}
-🌍 Language: {kokoro_language}
-📁 Chunks directory: {chunks_dir}
-🎵 Generated chunks: {len(chunk_files)}
-📊 Total size: {total_size:,} bytes
-⚠️ Note: Advanced stitching failed, using basic preview
-🏠 Privacy: Fully local processing""", combined_audio
-                            else:
-                                return "❌ No Kokoro audio chunks generated", None
-                        else:
-                            return "❌ Kokoro TTS generation failed", None
-                            
-                    except Exception as e:
-                        return f"❌ Kokoro TTS error: {str(e)}", None
-                
-                elif tts_engine == "gemini":
+                if tts_engine == "gemini":
                     # Use Gemini TTS
                     print("🤖 Using Gemini TTS")
                     
@@ -4679,7 +4494,7 @@ with gr.Blocks(css="footer {visibility: hidden}") as app:
         # Step 4: TTS generation
         generate_tts_btn.click(
             generate_tts_audio,
-            inputs=[translation_display, tts_engine_selection, gemini_language_selection, gemini_voice_selection, edge_language_selection, edge_voice_selection, kokoro_language_selection, kokoro_voice_selection, tts_method_selection, tts_instructions],
+            inputs=[translation_display, tts_engine_selection, gemini_language_selection, gemini_voice_selection, edge_language_selection, edge_voice_selection, tts_method_selection, tts_instructions],
             outputs=[tts_status, tts_audio_output]
         )
         
